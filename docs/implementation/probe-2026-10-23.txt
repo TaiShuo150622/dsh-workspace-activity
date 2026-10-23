@@ -1,0 +1,11 @@
+[probe] DSH_HOME=/var/folders/rk/9lsghs1d21q8r23cjg1ctrzm0000gn/T/dsh-wsa-probe-Ki4cMV
+PASS  P1 App 内置 CLI 把本仓装进一次性 web profile — + dsh-workspace-activity 0.1.0 <- ../../../../../../../../../Users/taishuo/projects/dsh-workspace-activity
+PASS  P2 一次性宿主启动并打印带 token 的 URL — http://127.0.0.1:63008
+PASS  P3 host 只监听 127.0.0.1 — 127.0.0.1
+PASS  P4 token URL 换到登录 cookie — status 303
+PASS  P5 boot graph 里有本插件的 client 行 — status 200 · 在
+PASS  P6 client bundle 被服务且形状正确 — status 200 · 1949436 bytes · combo 命中
+PASS  P7 client bundle 带同一个构建章 — id a3123961
+PASS  P8 无 cookie 打开页面被认证拦住 — status 401
+
+[probe] 8/8 项通过
