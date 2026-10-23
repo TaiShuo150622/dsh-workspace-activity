@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Workspace Activity",
+    "description": "Read-only panel that shows workspaces and sessions ordered by how active they are."
+  }
+}

@@ -1,0 +1,9 @@
+# 工作区活跃度面板：一条 insert 行。
+# 配置在 apply(ctx, config) 里读；改这里会触发 profile 重组（Node 半边换新）。
+- insert:
+    - id: workspace-activity
+      name: 'dsh-workspace-activity'
+      config:
+        windowMs: 86400000
+        maxSessions: 400
+        cacheTtlMs: 3000

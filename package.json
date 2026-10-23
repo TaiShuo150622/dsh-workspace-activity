@@ -1,0 +1,37 @@
+{
+  "name": "dsh-workspace-activity",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DSH Web GUI 的工作区活跃度面板：按活跃程度显示工作区与会话（只读）。",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "build.stamp.json",
+    "cordis.patch.yml",
+    "shared/*.js",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
+  }
+}
