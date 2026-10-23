@@ -23,20 +23,20 @@ const clientPath = join(ROOT, 'client', 'panel.js')
 const shared = readFileSync(sharedPath, 'utf8')
 const client = readFileSync(clientPath, 'utf8')
 
-const importLines = client.match(/^\s*import\s[^\n]*$/gm) ?? []
-const allowedImport = /from\s+['"]\.\.\/shared\/activity\.js['"]\s*;?\s*$/
-for (const line of importLines) {
-  if (!allowedImport.test(line)) {
-    console.error(`[build] client/panel.js 有不允许的 import：${line.trim()}`)
-    process.exit(1)
-  }
+// 允许且只允许**一条** import：指向 shared（可以跨行写成 { a, b, c } 的形式）。
+const importBlockRe = /^[ \t]*import\s*\{[\s\S]*?\}\s*from\s*['"]\.\.\/shared\/activity\.js['"]\s*;?[ \t]*\n?/gm
+const importBlocks = client.match(importBlockRe) ?? []
+if (importBlocks.length !== 1) {
+  console.error(`[build] client/panel.js 必须恰好有一条 import（指向 ../shared/activity.js），实际 ${importBlocks.length} 条`)
+  process.exit(1)
 }
-if (importLines.length > 1) {
-  console.error('[build] client/panel.js 只能有一行 import（shared）')
+const strippedClient = client.replace(importBlockRe, '')
+if (/^[ \t]*import\b/m.test(strippedClient)) {
+  const leftover = strippedClient.match(/^[ \t]*import\b[^\n]*/m)
+  console.error(`[build] client/panel.js 还有不允许的 import：${leftover ? leftover[0].trim() : ''}`)
   process.exit(1)
 }
 
-const stripImports = (src) => src.replace(/^\s*import\s[^\n]*\n?/gm, '')
 const stripExports = (src) => src.replace(/^export\s+/gm, '')
 
 const id = createHash('sha256').update(shared).update('\n').update(client).digest('hex').slice(0, 8)
@@ -55,7 +55,7 @@ try {
 }
 if (dirty && git) git += '+'
 
-const body = [stripExports(shared.trim()), stripImports(stripExports(client.trim()))].join('\n\n')
+const body = [stripExports(shared.trim()), stripExports(strippedClient.trim())].join('\n\n')
 const indented = body
   .split('\n')
   .map((line) => (line ? `\t\t${line}` : ''))
